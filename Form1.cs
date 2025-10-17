@@ -1,4 +1,8 @@
-﻿namespace TapCopter
+﻿using System.ComponentModel;
+using TapCopter.Models;
+using TapCopter.Properties;
+
+namespace TapCopter
 {
     public partial class PlayArea : Form
     {
@@ -7,20 +11,26 @@
         public int Distance { get; set; } = 0;
         public int BestScore { get; set; } = 0;
 
-        public bool MoveUp = false;
+        public bool MoveUp;
 
-        public bool MoveDown = false;
+        public int Gravity;
 
-        public int Gravity = 5;
+        public int time_btw_obstacles;
+
+        List<Obstacle> Buildings;
         public PlayArea()
         {
             InitializeComponent();
             HeliInitLocation = Helicopter.Location;
             lbl_distance.Visible = false;
             lbl_score.Visible = false;
-
+            Buildings = new List<Obstacle>();
+            Gravity = 5;
+            time_btw_obstacles = 0;
+            MoveUp = false;
         }
-        private void TimerMovementUpdater_Tick(object sender, EventArgs e)
+
+        public void MoveHelicopter()
         {
             if (!Started) return;
 
@@ -39,6 +49,76 @@
             Helicopter.Location = P;
         }
 
+        public void CreateBuidings ()
+        {
+            if (time_btw_obstacles == 0)
+            {
+                Random Rand = new Random();
+                int num = Rand.Next(50, 539 - 300);
+
+                Obstacle Building = new Obstacle(new Point(840, num));
+                Buildings.Add(Building);
+                Controls.Add(Building);
+
+                time_btw_obstacles = 60;
+            }
+            time_btw_obstacles--;
+
+        }
+
+        public void MoveBuildings()
+        {
+            if (Started == false)
+            {
+                return;
+            }
+            for (int i = Buildings.Count - 1; i >= 0; i--)
+            {
+                Buildings[i].MoveLeft();
+
+                if (Buildings[i].Location.X < -60)
+                {
+                    this.Controls.Remove(Buildings[i]);
+                    Buildings.RemoveAt(i);
+                }
+            }
+        }
+
+
+        public bool CheckCollision()
+        {
+            for(int i = 0; i < Buildings.Count(); i++)
+            {
+                if (Helicopter.Bounds.IntersectsWith(Buildings[i].Bounds))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void TimerMovementUpdater_Tick(object sender, EventArgs e)
+        {
+            if (Started)
+            {
+                CreateBuidings();
+                MoveHelicopter();
+                if (CheckCollision())
+                {
+                    var pos = Helicopter.Location;
+                    pos.X -= 4;
+                    pos.Y += 8;
+                    Helicopter.Location = pos;
+                    StopGame();
+                    return;
+                }
+                
+                MoveBuildings();
+                Distance += 1;
+                lbl_score.Text = Convert.ToString(Distance);
+            }
+        }
+
         public void StartGame()
         {
             lbl_distance.Visible = true;
@@ -48,12 +128,29 @@
             TimerMovementUpdater.Start();
         }
 
-        public void StopGame()
+        public async void StopGame()
         {
+               
+            TimerMovementUpdater.Stop();
+            lbl_start.Text = "Game Over!";
+            lbl_start.Visible = true;
 
+            await Task.Delay(3000);
+          
+
+            for (int i = Buildings.Count - 1; i >= 0; i--)
+            {
+                Controls.Remove(Buildings[i]);
+            }
+            Buildings.Clear();
+
+            Started = false;
+            Helicopter.Location = HeliInitLocation;
+            lbl_start.Text = "CLICK TO START";
+            lbl_controls.Visible = true;
         }
 
-        private void PlayArea_MouseClick(object sender, MouseEventArgs e)
+        public void PlayArea_MouseClick(object sender, MouseEventArgs e)
         {
             if (!Started)
             {
@@ -62,7 +159,7 @@
             }
         }
 
-        private void PlayArea_MouseDown(object sender, MouseEventArgs e)
+        public void PlayArea_MouseDown(object sender, MouseEventArgs e)
         {
             if (Started)
             {
@@ -72,7 +169,7 @@
 
 
 
-        private void PlayArea_KeyDown(object sender, KeyEventArgs e)
+        public void PlayArea_KeyDown(object sender, KeyEventArgs e)
         {
             if (Started)
             {
@@ -83,7 +180,7 @@
             }
         }
 
-        private void PlayArea_KeyUp(object sender, KeyEventArgs e)
+        public void PlayArea_KeyUp(object sender, KeyEventArgs e)
         {
             if (Started)
             {
@@ -94,7 +191,7 @@
             }
         }
 
-        private void PlayArea_MouseUp(object sender, MouseEventArgs e)
+        public void PlayArea_MouseUp(object sender, MouseEventArgs e)
         {
             if (Started)
             {

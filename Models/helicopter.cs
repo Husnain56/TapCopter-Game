@@ -13,7 +13,7 @@ namespace TapCopter.Models
             this.Height = this.Width = 50;
         }
         
-        public int speed { get; set; } = 5;
+        public int speed { get; set; } = 14;
         
         public void Display(Graphics g)
         {

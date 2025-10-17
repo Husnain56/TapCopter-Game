@@ -1,4 +1,7 @@
-﻿namespace TapCopter
+﻿using System.Windows.Forms;
+using TapCopter.Models;
+
+namespace TapCopter
 {
     partial class PlayArea
     {
@@ -31,7 +34,7 @@
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PlayArea));
             TimerMovementUpdater = new System.Windows.Forms.Timer(components);
-            Helicopter = new Models.Helicopter();
+            Helicopter = new Helicopter();
             lbl_start = new Label();
             lbl_controls = new Label();
             lbl_distance = new Label();
@@ -51,9 +54,9 @@
             Helicopter.BackColor = Color.Transparent;
             Helicopter.Image = (Image)resources.GetObject("Helicopter.Image");
             Helicopter.InitialImage = null;
-            Helicopter.Location = new Point(138, 159);
+            Helicopter.Location = new Point(111, 164);
             Helicopter.Name = "Helicopter";
-            Helicopter.Size = new Size(76, 61);
+            Helicopter.Size = new Size(126, 48);
             Helicopter.speed = 10;
             Helicopter.TabIndex = 0;
             Helicopter.TabStop = false;
