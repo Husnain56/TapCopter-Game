@@ -1,6 +1,9 @@
 ﻿using System.ComponentModel;
 using TapCopter.Models;
 using TapCopter.Properties;
+using static System.Formats.Asn1.AsnWriter;
+using System.Media;
+
 
 namespace TapCopter
 {
@@ -17,10 +20,28 @@ namespace TapCopter
 
         public int time_btw_obstacles;
 
+        public int HighScore;
+
         List<Obstacle> Buildings;
+
+        SoundPlayer Helicopter_Sound;
+        SoundPlayer Explosion_Sound;
+
         public PlayArea()
         {
             InitializeComponent();
+            string highScorePath = "Best Score.txt";
+            if (File.Exists(highScorePath))
+            {
+                string text = File.ReadAllText(highScorePath);
+                int.TryParse(text, out HighScore);
+            }
+            else
+            {
+                File.WriteAllText(highScorePath, "0");
+            }
+            lbl_bestscore_count.Text = Convert.ToString(HighScore);
+
             HeliInitLocation = Helicopter.Location;
             lbl_distance.Visible = false;
             lbl_score.Visible = false;
@@ -28,6 +49,13 @@ namespace TapCopter
             Gravity = 5;
             time_btw_obstacles = 0;
             MoveUp = false;
+            
+            string soundPath1 = Path.Combine(Application.StartupPath, "Sounds", "HelicopterSound.wav");
+            string soundPath2 = Path.Combine(Application.StartupPath, "Sounds", "ExplosionSound.wav");
+
+            Helicopter_Sound = new SoundPlayer(soundPath1);
+            Explosion_Sound = new SoundPlayer(soundPath2);
+
         }
 
         public void MoveHelicopter()
@@ -120,12 +148,28 @@ namespace TapCopter
         }
 
         public void StartGame()
-        {
+        {   
             lbl_distance.Visible = true;
             lbl_score.Visible = true;
             lbl_start.Visible = false;
             lbl_controls.Visible = false;
+
+            Helicopter_Sound.Play();
             TimerMovementUpdater.Start();
+        }
+
+        public void SaveHighScore()
+        {
+          
+            lbl_score.Text = "0";
+            if (Distance > HighScore)
+            {
+                HighScore = Distance;
+                File.WriteAllText("Best Score.txt", HighScore.ToString());
+                lbl_bestscore_count.Text = Convert.ToString(HighScore);
+            }
+            Distance = 0;
+            
         }
 
         public async void StopGame()
@@ -134,9 +178,12 @@ namespace TapCopter
             TimerMovementUpdater.Stop();
             lbl_start.Text = "Game Over!";
             lbl_start.Visible = true;
+            Helicopter_Sound.Stop();
+            Explosion_Sound.Play();
 
-            await Task.Delay(3000);
-          
+            await Task.Delay(4000);
+            Explosion_Sound.Stop();
+            SaveHighScore();
 
             for (int i = Buildings.Count - 1; i >= 0; i--)
             {

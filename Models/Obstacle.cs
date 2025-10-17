@@ -20,7 +20,6 @@ namespace TapCopter.Models
             this.SizeMode = PictureBoxSizeMode.StretchImage;
             this.Size = new Size(50, 140);
             this.Location = P;
-            
         }
 
         public void MoveLeft()

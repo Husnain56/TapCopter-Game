@@ -54,9 +54,9 @@ namespace TapCopter
             Helicopter.BackColor = Color.Transparent;
             Helicopter.Image = (Image)resources.GetObject("Helicopter.Image");
             Helicopter.InitialImage = null;
-            Helicopter.Location = new Point(111, 164);
+            Helicopter.Location = new Point(161, 159);
             Helicopter.Name = "Helicopter";
-            Helicopter.Size = new Size(126, 48);
+            Helicopter.Size = new Size(68, 58);
             Helicopter.speed = 10;
             Helicopter.TabIndex = 0;
             Helicopter.TabStop = false;
