@@ -41,6 +41,8 @@ namespace TapCopter
             lbl_bestscore = new Label();
             lbl_score = new Label();
             lbl_bestscore_count = new Label();
+            upper_panel = new Panel();
+            lower_panel = new Panel();
             ((System.ComponentModel.ISupportInitialize)Helicopter).BeginInit();
             SuspendLayout();
             // 
@@ -54,9 +56,9 @@ namespace TapCopter
             Helicopter.BackColor = Color.Transparent;
             Helicopter.Image = (Image)resources.GetObject("Helicopter.Image");
             Helicopter.InitialImage = null;
-            Helicopter.Location = new Point(161, 159);
+            Helicopter.Location = new Point(176, 163);
             Helicopter.Name = "Helicopter";
-            Helicopter.Size = new Size(68, 58);
+            Helicopter.Size = new Size(70, 47);
             Helicopter.speed = 10;
             Helicopter.TabIndex = 0;
             Helicopter.TabStop = false;
@@ -135,12 +137,30 @@ namespace TapCopter
             lbl_bestscore_count.TabIndex = 6;
             lbl_bestscore_count.Text = "0";
             // 
+            // upper_panel
+            // 
+            upper_panel.BackColor = Color.DarkCyan;
+            upper_panel.Location = new Point(1, 2);
+            upper_panel.Name = "upper_panel";
+            upper_panel.Size = new Size(898, 16);
+            upper_panel.TabIndex = 7;
+            // 
+            // lower_panel
+            // 
+            lower_panel.BackColor = Color.DarkCyan;
+            lower_panel.Location = new Point(1, 483);
+            lower_panel.Name = "lower_panel";
+            lower_panel.Size = new Size(898, 16);
+            lower_panel.TabIndex = 8;
+            // 
             // PlayArea
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ActiveCaptionText;
             ClientSize = new Size(900, 500);
+            Controls.Add(lower_panel);
+            Controls.Add(upper_panel);
             Controls.Add(lbl_bestscore_count);
             Controls.Add(lbl_score);
             Controls.Add(lbl_bestscore);
@@ -169,5 +189,7 @@ namespace TapCopter
         private Label lbl_bestscore;
         private Label lbl_score;
         private Label lbl_bestscore_count;
+        private Panel upper_panel;
+        private Panel lower_panel;
     }
 }

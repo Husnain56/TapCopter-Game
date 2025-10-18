@@ -115,12 +115,16 @@ namespace TapCopter
 
         public bool CheckCollision()
         {
-            for(int i = 0; i < Buildings.Count(); i++)
+            for (int i = 0; i < Buildings.Count(); i++)
             {
                 if (Helicopter.Bounds.IntersectsWith(Buildings[i].Bounds))
                 {
                     return true;
                 }
+            }
+
+            if (Helicopter.Bounds.IntersectsWith(upper_panel.Bounds) || Helicopter.Bounds.IntersectsWith(lower_panel.Bounds)) {
+                return true;
             }
             return false;
         }
@@ -134,8 +138,8 @@ namespace TapCopter
                 if (CheckCollision())
                 {
                     var pos = Helicopter.Location;
-                    pos.X -= 4;
-                    pos.Y += 8;
+                    pos.X -= 2;
+                    pos.Y += 2;
                     Helicopter.Location = pos;
                     StopGame();
                     return;
